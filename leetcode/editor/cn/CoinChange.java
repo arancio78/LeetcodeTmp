@@ -50,39 +50,27 @@ public class T322_CoinChange{
         // TO TEST
     }
     //leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public int coinChange(int[] coins, int amount) {
-        int[] dp=new int[amount+1];
-        Arrays.fill(dp,amount+1);
-        return solve(coins,amount,dp);
-
-    }
-
-
-    private int solve(int[] coins,int amount,int[] dp){
-        if(amount==0){
-            return 0;
-        }
-        if(amount<0){
-            return -1;
-        }
-        if(dp[amount]!=amount+1){
-            return dp[amount];
-        }
-        int res=Integer.MAX_VALUE;
-        for(int coin:coins){
-
-            int subProblem=solve(coins,amount-coin,dp);
-            if(subProblem==-1){
-                continue;
+    class Solution {
+        public int coinChange(int[] coins, int amount) {
+            int m = coins.length;
+            int[][] dp = new int[m + 1][amount + 1];
+            for (int i = 0; i <= m; ++i) {
+                Arrays.fill(dp[i], amount + 1);
             }
-            res=Math.min(res,subProblem+1);
+            dp[0][0] = 0;
+            for (int i = 1; i <= m; ++i) {
+                int v = coins[i - 1];
+                for (int j = 0; j <= amount; ++j) {
+                    dp[i][j] = dp[i - 1][j];
+                    if (j >= v) {
+                        dp[i][j] = Math.min(dp[i][j], dp[i][j - v] + 1);
+                    }
+                }
+            }
+            return dp[m][amount] > amount ? - 1 : dp[m][amount];
         }
-        dp[amount]=(res>=amount+1?-1:res);
-        return dp[amount];
-
     }
-}
+
 //leetcode submit region end(Prohibit modification and deletion)
 
 }
